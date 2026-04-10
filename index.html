@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WBTI - 打工人类型指标测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f4f5f7;
+            background-image: radial-gradient(#d7d7d7 2px, transparent 2px);
+            background-size: 24px 24px;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 首页全新样式 (Acid/Modern Style) */
+        .home-page {
+            text-align: center;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 85vh;
+        }
+
+        .hero-header {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .title {
+            font-size: 4.5em;
+            font-weight: 900;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            text-shadow: 4px 4px 0px #ff4757;
+            line-height: 1;
+        }
+
+        .badge {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: inline-block;
+            transform: rotate(-3deg);
+            box-shadow: 2px 2px 0px #ffd32a;
+        }
+
+        .hero-visual {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 20px auto 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-circle {
+            width: 160px;
+            height: 160px;
+            background: #ffd32a;
+            border-radius: 50%;
+            border: 4px solid #1a1a1a;
+            box-shadow: 8px 8px 0px #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+        }
+
+        .floating-item {
+            position: absolute;
+            font-size: 3em;
+            animation: float 3s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .item-1 { top: 10px; left: 0px; animation-delay: 0s; }
+        .item-2 { bottom: 20px; right: 0px; animation-delay: 1s; }
+        .item-3 { top: 40px; right: -10px; animation-delay: 2s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .intro-section {
+            margin-bottom: 40px;
+        }
+
+        .intro-title {
+            font-size: 1.6em;
+            font-weight: 900;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .intro-desc {
+            font-size: 1.05em;
+            color: #666;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .start-btn {
+            background: #ffd32a;
+            color: #1a1a1a;
+            border: 4px solid #1a1a1a;
+            padding: 18px 40px;
+            font-size: 1.4em;
+            font-weight: 900;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 6px 6px 0px #1a1a1a;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .start-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #1a1a1a;
+        }
+
+        .start-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0px #1a1a1a;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .footer-text {
+            text-align: center;
+            color: #999;
+            font-size: 0.85em;
+            margin-top: 30px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .result-disclaimer {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.85em;
+            color: #666;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        /* 测试页面样式 */
+        .test-page {
+            display: none;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 6px;
+            height: 6px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #1a1a1a;
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .question-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 30px 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .question-number {
+            color: #999;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-item {
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .option-item:hover {
+            background: #fff;
+            border-color: #1a1a1a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .option-item:active {
+            transform: scale(0.98);
+            background: #fff;
+            border-color: #1a1a1a;
+        }
+
+        .option-text {
+            font-size: 1.05em;
+            color: #333;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* 结果页面样式 */
+        .result-page {
+            display: none;
+        }
+
+        .result-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 30px 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.05);
+            text-align: center;
+            position: relative;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #1a1a1a;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .result-type-code {
+            font-size: 1.5em;
+            font-weight: 500;
+            color: #999;
+            margin-bottom: 15px;
+            letter-spacing: 4px;
+        }
+
+        .result-title {
+            font-size: 2.2em;
+            font-weight: 900;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .result-summary {
+            font-size: 1.15em;
+            color: #ff4757;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .result-section {
+            text-align: left;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .result-section-title {
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+        }
+
+        .result-section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 14px;
+            background: #ff4757;
+            border-radius: 2px;
+            margin-right: 8px;
+        }
+
+        .result-section-content {
+            font-size: 0.95em;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .quote-box {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 25px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 1.15em;
+            font-weight: 500;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .quote-box::before {
+            content: '"';
+            position: absolute;
+            top: 5px;
+            left: 15px;
+            font-size: 60px;
+            color: rgba(255,255,255,0.15);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* 维度结果卡片 */
+        .dimension-result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .dimension-result-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .dimension-result-type {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .type-high {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .type-mid {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .type-low {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e0e0e0;
+            border-top-color: #1a1a1a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #1a1a1a;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        /* 彩蛋称号样式 */
+        .special-badge {
+            background: #ff4757;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-size: 1em;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2em;
+            }
+
+            .question-text {
+                font-size: 1.1em;
+            }
+
+            .option-text {
+                font-size: 0.95em;
+            }
+
+            .card {
+                padding: 25px 15px;
+            }
+
+            .result-title {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 首页 -->
+        <div class="home-page" id="homePage">
+            <div class="hero-header">
+                <h1 class="title">WBTI</h1>
+                <div class="badge">打工人专属人格测试</div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="floating-item item-1">💻</div>
+                <div class="floating-item item-2">☕</div>
+                <div class="floating-item item-3">💼</div>
+                <div class="hero-circle">🤪</div>
+            </div>
+
+            <div class="intro-section">
+                <h2 class="intro-title">测测你是哪种职场牛马？</h2>
+                <p class="intro-desc">30道送命题，直击灵魂深处<br>测出你的真实打工状态</p>
+            </div>
+
+            <button class="start-btn pulse" onclick="startTest()">立即开测 🚀</button>
+
+            <p class="footer-text" style="margin-top: 20px;">
+                ⏱️ 预计用时 3 分钟 · 纯属娱乐
+            </p>
+        </div>
+
+        <!-- 测试页面 -->
+        <div class="test-page" id="testPage">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p class="progress-text" id="progressText">1 / 30</p>
+
+            <div class="question-card">
+                <p class="question-number" id="questionNumber">投入度 (C) - 第1题</p>
+                <p class="question-text" id="questionText">题目内容</p>
+                <div class="options-list" id="optionsList">
+                    <!-- 选项动态生成 -->
+                </div>
+                <p style="text-align: center; color: #999; font-size: 0.85em; margin-top: 20px;">
+                    💡 提示：凭第一反应选择，不要过度思考
+                </p>
+            </div>
+        </div>
+
+        <!-- 加载页面 -->
+        <div class="loading" id="loadingPage">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">正在分析你的打工人类型...</p>
+            <p style="color: rgba(255,255,255,0.7); font-size: 0.9em; margin-top: 15px;">
+                请稍候，马上就好！
+            </p>
+        </div>
+
+        <!-- 结果页面 -->
+        <div class="result-page" id="resultPage">
+            <div class="result-card">
+                <p style="color: #999; font-size: 0.9em; margin-bottom: 10px;">🎉 测试完成！</p>
+                <div id="specialBadge" class="special-badge" style="display: none;"></div>
+                <p class="result-type-code" id="resultCode">C+ F- S O+ A-</p>
+                <h2 class="result-title" id="resultTitle">类型昵称</h2>
+
+                <!-- 新增：人物形象展示区 -->
+                <div class="persona-image-container" style="text-align: center; margin: 20px 0;">
+                    <img id="personaImage" src="" alt="人物形象" style="width: 100%; max-width: 280px; border-radius: 20px; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 4px solid #fff;">
+                </div>
+
+                <p class="result-summary" id="resultSummary">一句话总结</p>
+
+                <div class="quote-box" id="quoteBox">
+                    "嘴替台词"
+                </div>
+
+                <div class="result-section">
+                    <p class="result-section-title">职场画像</p>
+                    <p class="result-section-content" id="portrait">职场画像内容</p>
+                </div>
+
+                <div class="result-section">
+                    <p class="result-section-title">领导眼中你</p>
+                    <p class="result-section-content" id="leaderView">领导眼中你</p>
+                </div>
+
+                <div class="result-section">
+                    <p class="result-section-title">同事眼中你</p>
+                    <p class="result-section-content" id="colleagueView">同事眼中你</p>
+                </div>
+
+                <div class="result-section">
+                    <p class="result-section-title">生存建议</p>
+                    <p class="result-section-content" id="advice">生存建议</p>
+                </div>
+
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;" id="dimensionDetailsContainer">
+                    <p style="font-weight: bold; margin-bottom: 15px; color: #333;">各维度详情</p>
+                    <div id="dimensionDetails">
+                        <!-- 维度详情动态生成 -->
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="restartTest()">重新测试</button>
+                    <button class="btn btn-primary" onclick="shareResult()">分享结果</button>
+                </div>
+
+                <div class="result-disclaimer">
+                    <p><strong>📝 结果说明</strong></p>
+                    <p>本测试结果仅供参考和娱乐，不构成任何职业建议或性格判断。每个人的工作状态会随环境、心境和时间变化，今天的测试结果可能明天就会不同。请以轻松的心态看待结果，不要给自己贴上固定的标签。</p>
+                </div>
+            </div>
+        </div>
+
+        <p class="footer-text">
+            💪 工作不易，打工人加油！<br>
+            本测试为娱乐性质，请勿过度解读结果
+        </p>
+    </div>
+
+    <script>
+        // 题目数据
+        const questions = [
+            // 投入度 (C) 1-6
+            {
+                dimension: 'C',
+                question: '晚上11点，工作群里大老板突然发了个红包，并说“大家辛苦了”，你的真实反应是：',
+                options: [
+                    { text: '光速抢包，反手一个"老板大气，愿为公司肝脑涂地"表情包', score: 2 },
+                    { text: '抢了，跟着大部队发个"谢谢老板"', score: 1 },
+                    { text: '装死，只要我不看手机，工作就找不到我', score: 0 },
+                    { text: '一块钱的红包想买我下班时间？做梦', score: -1 },
+                    { text: '反手就是一个消息免打扰，并在心里暗骂"又在画大饼"', score: -2 }
+                ]
+            },
+            {
+                dimension: 'C',
+                question: '领导在周会上说：“年轻人要多吃苦，把公司当家”，你心里想的是：',
+                options: [
+                    { text: '老板说得对！我生是公司的人，死是公司的鬼！', score: 2 },
+                    { text: '左耳进右耳出，内心毫无波澜甚至想吃烤肉', score: 1 },
+                    { text: '当家？那我可以把脚翘桌子上打游戏吗？', score: 0 },
+                    { text: '钱给够我就是牛马，钱没给够少跟我扯犊子', score: -1 },
+                    { text: '默默打开BOSS直聘，开始海投简历', score: -2 }
+                ]
+            },
+            {
+                dimension: 'C',
+                question: '你的年假通常是怎么用掉的？',
+                options: [
+                    { text: '根本没空休，全指望年底折现回点血', score: 2 },
+                    { text: '抠抠搜搜半天半天请，全用来跑医院和办证了', score: 1 },
+                    { text: '死死攒着，就等年底凑个超长假出去浪', score: 0 },
+                    { text: '只要老子今天不想上班，反手就是一个请假条', score: -1 },
+                    { text: '年假早透支了，现在正研究怎么搞病假条最稳妥', score: -2 }
+                ]
+            },
+            {
+                dimension: 'C',
+                question: '面对一个明显不合理、会增加大量工作量的需求，你会：',
+                options: [
+                    { text: '干就完了！这可是我升职加薪的垫脚石！', score: 2 },
+                    { text: '疯狂拉扯，试图把工作量砍掉一半', score: 1 },
+                    { text: '满口答应，然后开启"拖字诀"，主打一个糊弄', score: 0 },
+                    { text: '光速甩锅："这块不是我负责的，你找XXX吧"', score: -1 },
+                    { text: '直接掀桌子："爱谁干谁干，老子不伺候了！"', score: -2 }
+                ]
+            },
+            {
+                dimension: 'C',
+                question: '你的电脑桌面壁纸是：',
+                options: [
+                    { text: '公司大目标或者密密麻麻的排期表，时刻鞭策自己', score: 2 },
+                    { text: '系统默认壁纸，主打一个极简无欲无求', score: 1 },
+                    { text: '我家猫主子/纸片人老公/女鹅，靠他们续命', score: 0 },
+                    { text: '财神爷、好运符，每天上班先拜一拜', score: -1 },
+                    { text: '巨大的"莫生气"或者"准点下班"，时刻提醒自己保命要紧', score: -2 }
+                ]
+            },
+            {
+                dimension: 'C',
+                question: '如果公司宣布实行“大小周”（单双休），你的反应是：',
+                options: [
+                    { text: '坚决拥护！只要能多赚钱，住公司都行！', score: 2 },
+                    { text: '叹口气认命，毕竟现在大环境差，苟着吧', score: 1 },
+                    { text: '表面稳如老狗，背地里已经开始疯狂刷简历了', score: 0 },
+                    { text: '拉个小群，撺掇同事一起去跟HR要加班费', score: -1 },
+                    { text: '单休？想得美！明天直接把辞职信拍老板桌上', score: -2 }
+                ]
+            },
+            // 专注度 (F) 7-12
+            {
+                dimension: 'F',
+                question: '每天早上到公司，你做的第一件事是：',
+                options: [
+                    { text: '打开待办清单，像打了鸡血一样开始清任务', score: 2 },
+                    { text: '泡杯咖啡，慢悠悠看一眼邮件，进入状态', score: 1 },
+                    { text: '直奔厕所带薪拉屎，不刷半小时抖音绝不出来', score: 0 },
+                    { text: '端着早饭到处串门，先把昨晚的瓜吃明白再说', score: -1 },
+                    { text: '瘫在椅子上双眼无神，灵魂还在被窝里没醒', score: -2 }
+                ]
+            },
+            {
+                dimension: 'F',
+                question: '你的浏览器收藏夹里最多的是什么？',
+                options: [
+                    { text: '全是行业干货、竞品分析和各种效率神器', score: 2 },
+                    { text: '一半是工作资料，一半是吃喝玩乐', score: 1 },
+                    { text: '淘宝京东小红书，全是买买买和旅游攻略', score: 0 },
+                    { text: '小说、漫画、在线小游戏，摸鱼三件套', score: -1 },
+                    { text: '《劳动法》、仲裁攻略、N+1赔偿计算器', score: -2 }
+                ]
+            },
+            {
+                dimension: 'F',
+                question: '当你遇到一个需要专注2小时才能写完的方案时，你会：',
+                options: [
+                    { text: '手机一扣，耳机一戴，谁也不爱，疯狂输出', score: 2 },
+                    { text: '写两行字，回三条微信，主打一个雨露均沾', score: 1 },
+                    { text: '说好找找灵感，结果刷了一上午小红书，一个字没动', score: 0 },
+                    { text: '直接丢给AI，复制粘贴，5分钟搞定收工', score: -1 },
+                    { text: '死线前一小时才开始慌，靠着肾上腺素狂飙写完', score: -2 }
+                ]
+            },
+            {
+                dimension: 'F',
+                question: '你的微信电脑版通常是什么状态？',
+                options: [
+                    { text: '只登企微/钉钉，私人微信绝对不登，公私分明', score: 2 },
+                    { text: '登是登了，但只回重要的人，其他一律装死', score: 1 },
+                    { text: '几十个群聊疯狂闪烁，像个瓜田里的猹到处乱窜', score: 0 },
+                    { text: '正在小窗跟基友疯狂输出，把老板同事骂了个遍', score: -1 },
+                    { text: '早就用上了防偷窥皮肤，看着像在写代码，其实在聊天', score: -2 }
+                ]
+            },
+            {
+                dimension: 'F',
+                question: '下午3点半，你通常在干嘛？',
+                options: [
+                    { text: '不是在开会，就是在疯狂敲键盘赶进度的路上', score: 2 },
+                    { text: '猛灌一口冰美式续命，继续搬砖', score: 1 },
+                    { text: '准时在群里发"喝奶茶吗"，开始纠结晚上吃啥', score: 0 },
+                    { text: '已经溜到楼下抽烟/买咖啡，进行光合作用了', score: -1 },
+                    { text: '包都收拾好了，正在脑内疯狂演练下班冲刺路线', score: -2 }
+                ]
+            },
+            {
+                dimension: 'F',
+                question: '领导突然走到你身后看你的屏幕，你：',
+                options: [
+                    { text: '稳如泰山，反正满屏都是工作，随便你看', score: 2 },
+                    { text: '心里咯噔一下，还好屏幕上确实是PPT', score: 1 },
+                    { text: '肌肉记忆瞬间爆发，Alt+Tab秒切回工作界面', score: 0 },
+                    { text: '单手托腮假装沉思，其实屏幕上是刚加购的衣服', score: -1 },
+                    { text: '吓得猛地一盖电脑，空气突然安静，场面极度尴尬', score: -2 }
+                ]
+            },
+            // 稳定度 (S) 13-18
+            {
+                dimension: 'S',
+                question: '发给领导的方案被打了回来，批注“重做，感觉不对”，你会：',
+                options: [
+                    { text: '情绪极其稳定，秒回"好的老板，具体哪里需要调"，马上开干', score: 2 },
+                    { text: '深深叹了口气，认命地打开文档重新编', score: 1 },
+                    { text: '心里已经把老板祖宗十八代问候了一遍，手上随便改改交差', score: 0 },
+                    { text: '瞬间破防："我是不是个废物？他是不是在针对我？"', score: -1 },
+                    { text: '心态彻底崩了，躲进厕所隔间偷偷抹眼泪，疯狂想辞职', score: -2 }
+                ]
+            },
+            {
+                dimension: 'S',
+                question: '发现同岗位的同事工资比你高30%，你的内心活动是：',
+                options: [
+                    { text: '暗中观察他的套路，准备下次谈薪时拿来用', score: 2 },
+                    { text: '心里有点酸，但想想人家可能确实比我能卷', score: 1 },
+                    { text: '关我屁事，只要没扣我的钱，爱发多少发多少', score: 0 },
+                    { text: '气得半夜在床上翻来覆去，觉得这破公司吃枣药丸', score: -1 },
+                    { text: '忍不了一点！明天就去敲老板门要加薪，不给就拜拜', score: -2 }
+                ]
+            },
+            {
+                dimension: 'S',
+                question: '周日晚上8点，想到明天要上班，你的生理反应是：',
+                options: [
+                    { text: '毫无波澜，甚至已经开始盘算明天的工作计划了', score: 2 },
+                    { text: '长叹一口气，感叹周末怎么跟没过一样就没了', score: 1 },
+                    { text: '死活不肯睡，疯狂刷手机，主打一个报复性熬夜', score: 0 },
+                    { text: '一想到明天要见老板，胃就开始疼，呼吸都觉得困难', score: -1 },
+                    { text: '已经在知乎搜索"怎么才能无痛骨折请一个月病假"了', score: -2 }
+                ]
+            },
+            {
+                dimension: 'S',
+                question: '开会时，两个部门的领导吵起来了，你会：',
+                options: [
+                    { text: '赶紧出来当和事佬，试图端水把场子圆回来', score: 2 },
+                    { text: '疯狂敲键盘装作在记纪要，其实在努力降低存在感', score: 1 },
+                    { text: '表面眉头紧锁，内心狂喜："打起来！打起来！"，恨不得抓把瓜子', score: 0 },
+                    { text: '尴尬得脚趾抠出三室一厅，只想原地消失', score: -1 },
+                    { text: '吓得瑟瑟发抖，生怕下一秒这口大锅就甩到自己头上', score: -2 }
+                ]
+            },
+            {
+                dimension: 'S',
+                question: '你的体检报告发下来了，上面有几个向上的箭头，你会：',
+                options: [
+                    { text: '火速挂号看病，当晚就办了张健身卡发誓要养生', score: 2 },
+                    { text: '默默把奶茶换成了枸杞泡水，决定今晚早点睡', score: 1 },
+                    { text: '只要没查出绝症就行，哪个打工人身上没点毛病', score: 0 },
+                    { text: '吓得魂飞魄散，觉得自己马上就要猝死在工位上了', score: -1 },
+                    { text: '根本不敢点开看，只要我不看体检报告，我就没病！', score: -2 }
+                ]
+            },
+            {
+                dimension: 'S',
+                question: '晚上躺在床上，你的大脑通常在播放什么？',
+                options: [
+                    { text: '明天要开的会、要写的PPT、要回的邮件...', score: 2 },
+                    { text: '刚才追的剧、看的文，脑子里还在疯狂磕CP', score: 1 },
+                    { text: '脑子一片空白，沾枕头三秒钟直接打呼噜', score: 0 },
+                    { text: '白天老板那个眼神啥意思？同事那句话是不是在内涵我？反复内耗', score: -1 },
+                    { text: '"我这辈子是不是就只能当个牛马了？"的终极哲学拷问', score: -2 }
+                ]
+            },
+            // 社交度 (O) 19-24
+            {
+                dimension: 'O',
+                question: '公司年会上，主持人突然抽中你上台表演个节目，你会：',
+                options: [
+                    { text: '人来疯属性爆发，上去就是一段热舞，直接把场子炸翻', score: 2 },
+                    { text: '虽然有点社死，但还是硬着头皮上去唱了首《好运来》', score: 1 },
+                    { text: '疯狂摆手拒绝，最后被架上去干巴巴讲了个冷笑话', score: 0 },
+                    { text: '脸憋得通红，死死扒住椅子绝不上去，场面一度十分尴尬', score: -1 },
+                    { text: '听到名字的瞬间，已经一个尿遁闪现到了厕所', score: -2 }
+                ]
+            },
+            {
+                dimension: 'O',
+                question: '在电梯里只有你和公司大老板两个人，你会：',
+                options: [
+                    { text: '绝佳的马屁机会！赶紧汇报工作亮点，顺便刷个脸熟', score: 2 },
+                    { text: '标准假笑喊一句"老板好"，然后缩在角落装壁花', score: 1 },
+                    { text: '死死盯着电梯楼层数字，假装自己是个没有感情的雕塑', score: 0 },
+                    { text: '紧张到连呼吸都不敢用力，疯狂祈祷电梯赶紧开门', score: -1 },
+                    { text: '看到老板在里面，宁愿去爬10层楼梯也绝对不进去！', score: -2 }
+                ]
+            },
+            {
+                dimension: 'O',
+                question: '午休时间，同事们聚在一起聊八卦，你会：',
+                options: [
+                    { text: '火速端着饭盒凑过去，反手爆出一个更炸裂的惊天大瓜', score: 2 },
+                    { text: '边干饭边竖起耳朵听，偶尔跟着"卧槽"两句', score: 1 },
+                    { text: '降噪耳机一戴，iPad一架，你们聊你们的，我看我的甄嬛传', score: 0 },
+                    { text: '心里觉得吵死了，但表面上还要维持尴尬的微笑', score: -1 },
+                    { text: '惹不起躲得起，端着饭盒溜去空会议室享受孤独', score: -2 }
+                ]
+            },
+            {
+                dimension: 'O',
+                question: '新来了一个同事坐在你旁边，你会：',
+                options: [
+                    { text: '自来熟属性爆发，火速拉他进各种干饭群、摸鱼群', score: 2 },
+                    { text: '客客气气打个招呼："你好，有事随时叫我"，然后继续干活', score: 1 },
+                    { text: '敌不动我不动，只要他不开口，我能憋到天荒地老', score: 0 },
+                    { text: '感觉自己的领地被入侵了，浑身难受，连摸鱼都不自在了', score: -1 },
+                    { text: '已经在琢磨怎么跟老板说换座位了，我只想独自美丽', score: -2 }
+                ]
+            },
+            {
+                dimension: 'O',
+                question: '跨部门沟通时，对方一直不回消息，你会：',
+                options: [
+                    { text: '直接杀到他工位上，当面把事情掰扯清楚，别想装死', score: 2 },
+                    { text: '一个语音电话直接甩过去："兄弟，那事儿咋样了？"', score: 1 },
+                    { text: '在大群里疯狂@他，顺便把双方老板都拉出来"公开处刑"', score: 0 },
+                    { text: '只能隔五分钟发个"？"，在屏幕前急得抓耳挠腮', score: -1 },
+                    { text: '他不回？太好了！这活儿名正言顺地搁置，反正锅不在我', score: -2 }
+                ]
+            },
+            {
+                dimension: 'O',
+                question: '团建玩“狼人杀”或“剧本杀”时，你通常是：',
+                options: [
+                    { text: '逻辑满分，疯狂带节奏，把全场骗得团团转的"高玩"', score: 2 },
+                    { text: '老老实实做笔记，努力分析局势的本分玩家', score: 1 },
+                    { text: '抽到好人就全程划水，抽到狼人就紧张得狂喝水', score: 0 },
+                    { text: '觉得这破游戏又累又无聊，满脑子只有"什么时候能回家"', score: -1 },
+                    { text: '借口去上厕所，然后找了个没人的沙发直接睡死过去', score: -2 }
+                ]
+            },
+            // 进取度 (A) 25-30
+            {
+                dimension: 'A',
+                question: '面对公司画的“期权”、“上市”、“年底大红包”等大饼，你：',
+                options: [
+                    { text: '深信不疑！只要跟着老板干，明年就能喜提保时捷！', score: 2 },
+                    { text: '虽然知道是画饼，但万一实现了呢？有个盼头也挺好', score: 1 },
+                    { text: '左耳进右耳出，别跟我扯这些虚的，我只看下个月工资发多少', score: 0 },
+                    { text: '内心疯狂翻白眼："这破饼我都吃吐了，还拿来忽悠人"', score: -1 },
+                    { text: '已经在小群里把老板的话做成表情包，和同事疯狂群嘲了', score: -2 }
+                ]
+            },
+            {
+                dimension: 'A',
+                question: '你的直属领导离职了，空出了一个管理岗位，你会：',
+                options: [
+                    { text: '机会来了！连夜写好PPT，明天一早就去敲大老板的门毛遂自荐', score: 2 },
+                    { text: '开始疯狂表现，天天加班，疯狂暗示老板"选我选我"', score: 1 },
+                    { text: '佛了，爱谁当谁当，反正我就是个无情的打工机器', score: 0 },
+                    { text: '千万别提拔我！我可不想天天开会背锅，当个大头兵挺好', score: -1 },
+                    { text: '赶紧四处打听空降的领导是谁，要是是个傻X我立马提桶跑路', score: -2 }
+                ]
+            },
+            {
+                dimension: 'A',
+                question: '业余时间，你会花钱报班或者买课提升职业技能吗？',
+                options: [
+                    { text: '疯狂买课！各种行业大会、知识星球、付费专栏全安排上', score: 2 },
+                    { text: '偶尔买买，遇到实在搞不定的技能才去报个班突击一下', score: 1 },
+                    { text: 'B站、B站、还是B站，白嫖教程使我快乐，花一分钱算我输', score: 0 },
+                    { text: '下班后脑子已经宕机了，只想躺在床上刷短视频，学习个屁', score: -1 },
+                    { text: '就这点工资，我现在的技能已经算是降维打击了，还学啥？', score: -2 }
+                ]
+            },
+            {
+                dimension: 'A',
+                question: '你认为一份“好工作”最重要的标准是：',
+                options: [
+                    { text: '能让我快速成长、升职加薪、走上人生巅峰的跳板！', score: 2 },
+                    { text: '没别的，就是钱多！只要钱给够，老板让我干啥我干啥', score: 1 },
+                    { text: '钱多事少离家近，位高权重责任轻，主打一个性价比', score: 0 },
+                    { text: '绝对不加班！双休！到点就走！谁也别想占用我的私人时间', score: -1 },
+                    { text: '山高皇帝远，没有KPI，每天可以光明正大摸鱼的神仙养老院', score: -2 }
+                ]
+            },
+            {
+                dimension: 'A',
+                question: '如果有个猎头联系你，说有个薪水翻倍但极其辛苦的初创公司机会，你：',
+                options: [
+                    { text: '翻倍？！马上发简历！只要钱到位，我能把初创公司干上市！', score: 2 },
+                    { text: '先稳住，打听一下到底有多辛苦，算算时薪划不划算再决定', score: 1 },
+                    { text: '婉拒了哈，我现在这坑挺舒服的，不想去初创公司拿命换钱', score: 0 },
+                    { text: '翻倍？那得进ICU吧？算了我还想多活几年，命比钱重要', score: -1 },
+                    { text: '直接拉黑猎头，别拿这种大饼来打扰我平静的咸鱼生活', score: -2 }
+                ]
+            },
+            {
+                dimension: 'A',
+                question: '你对“35岁职场危机”的看法是：',
+                options: [
+                    { text: '只要我卷得够快，爬得够高，35岁危机就追不上我！', score: 2 },
+                    { text: '慌得一批，已经在疯狂攒钱、搞副业，准备给自己留条后路了', score: 1 },
+                    { text: '走一步看一步吧，大不了35岁去开滴滴、送外卖、当保安', score: 0 },
+                    { text: '极度恐慌，每天都在倒计时，觉得自己马上就要被社会淘汰了', score: -1 },
+                    { text: '35岁？就我现在这熬夜加班的频率，能不能活到35岁都不一定呢', score: -2 }
+                ]
+            }
+        ];
+
+        // 16种打工人类型 (Personas)
+        const personas = {
+            "WEZO": { name: "六边形战士", summary: "老板的梦中情员，HR的招聘模板", portrait: "西装革履，手拿咖啡，走路带风，见谁都笑眯眯，但手里的活一秒没停过。", leaderView: "无可挑剔的完美员工", colleagueView: "神仙队友，跟着他有肉吃", advice: "保持节奏，别让别人太依赖你" },
+            "WEZI": { name: "扫地僧", summary: "别跟我说话，需求文档发我", portrait: "戴着降噪耳机，面无表情敲键盘，工位极其整洁，到点准时下班。", leaderView: "人狠话不多，交代的任务总能搞定", colleagueView: "高冷大神，不敢轻易搭话", advice: "偶尔摘下耳机，和大家打个招呼吧" },
+            "WEAO": { name: "操心大管家", summary: "这个项目没我迟早要完", portrait: "拿着笔记本到处确认进度，眉头微皱，但对谁都很客气。", leaderView: "责任心爆棚，团队的粘合剂", colleagueView: "靠谱好心人，就是看着有点累", advice: "放下助人情结，尊重他人命运" },
+            "WEAI": { name: "深夜补锅侠", summary: "我也不想卷，但锅总砸我头上", portrait: "顶着黑眼圈，深夜独自在工位上疯狂敲击键盘，旁边放着防脱发洗发水。", leaderView: "吃苦耐劳，任劳任怨", colleagueView: "太惨了，总是他在兜底", advice: "学会拒绝，你的善良需要带点锋芒" },
+            "WFZO": { name: "职场老油条", summary: "太极推手十级学者，功劳都是我的", portrait: "端着保温杯，笑眯眯地把活甩给新人，自己在一旁指点江山。", leaderView: "圆滑世故，能搞定复杂关系", colleagueView: "老狐狸，千万别被他套路了", advice: "小心翻车，真本事才是硬道理" },
+            "WFZI": { name: "隐形刺客", summary: "只要我足够透明，活就找不到我", portrait: "平时看不见人，关键时刻突然拿出一个惊艳的方案，然后继续消失。", leaderView: "让人又爱又恨的奇才", colleagueView: "神出鬼没，不知道他整天在干嘛", advice: "多刷点存在感，不然升职加薪轮不到你" },
+            "WFAO": { name: "表演型卷王", summary: "卷不在多，在于被老板看见", portrait: "朋友圈天天发加班，老板在的时候疯狂敲键盘，老板一走立刻刷手机。", leaderView: "态度很积极，就是产出有点水", colleagueView: "戏精本精，奥斯卡欠他一个小金人", advice: "少点套路，多点真诚" },
+            "WFAI": { name: "焦虑卷心菜", summary: "每天都在想辞职，每天都在准时打卡", portrait: "看着屏幕发呆，想卷卷不动，想摸鱼又心虚，每天都在想辞职。", leaderView: "看起来很忙，但不知道在忙啥", colleagueView: "感觉他随时都要崩溃", advice: "放过自己，工作只是一份工作" },
+            "LEZO": { name: "快乐打卡机", summary: "拿多少钱干多少活，多一分都不行", portrait: "准时上班，高效干完自己的活，然后开始和同事快乐聊天，绝不多干一点。", leaderView: "本分工作，不出错也不出彩", colleagueView: "快乐源泉，和他做同事很轻松", advice: "保持快乐，这就是打工的真谛" },
+            "LEZI": { name: "无情执行者", summary: "收到，好的，已完成", portrait: "像机器一样精准完成任务，没有感情，没有废话，干完就走。", leaderView: "指哪打哪，执行力满分", colleagueView: "没有感情的打字机", advice: "偶尔展现一下人情味，路会更宽" },
+            "LEAO": { name: "讨好型牛马", summary: "好的好的我来弄（内心：烦死了）", portrait: "虽然不想干，但别人一拜托就不好意思拒绝，干完又自己生闷气。", leaderView: "听话好用，随叫随到", colleagueView: "老好人，找他帮忙准没错", advice: "你的价值不需要通过讨好别人来证明" },
+            "LEAI": { name: "委屈包", summary: "为什么受伤的总是我", portrait: "默默干活，受了委屈也不说，只会在心里疯狂吐槽公司。", leaderView: "存在感低，容易被忽视", colleagueView: "看着挺可怜的", advice: "勇敢表达自己的诉求，会哭的孩子有糖吃" },
+            "LFZO": { name: "气氛组组长", summary: "工作可以不会，但八卦不能不听", portrait: "手里端着奶茶，到处串门聊天，桌上全是零食，全公司的开心果。", leaderView: "活跃气氛可以，干活指望不上", colleagueView: "八卦集散地，有他在绝不无聊", advice: "提升一下核心竞争力，不然容易被裁" },
+            "LFZI": { name: "摸鱼仙人", summary: "只要我足够透明，活就找不到我", portrait: "工位上只有一件外套，人永远在带薪拉屎或楼下抽烟，与世无争。", leaderView: "这人还在我们公司吗？", colleagueView: "摸鱼界的祖师爷", advice: "小心被HR盯上" },
+            "LFAO": { name: "职场混子", summary: "这破公司迟早要完（但明天还是准时来）", portrait: "到处抱怨公司不好，但就是不辞职，靠着一张嘴混日子。", leaderView: "负能量制造机，头疼", colleagueView: "听他抱怨听得耳朵起茧子了", advice: "要么忍，要么滚，别天天抱怨" },
+            "LFAI": { name: "绝望的咸鱼", summary: "毁灭吧，赶紧的", portrait: "瘫在椅子上，眼神空洞，对工作没有任何期待，只等发工资。", leaderView: "已经放弃治疗了", colleagueView: "行尸走肉一般", advice: "找点生活中的乐子，别让工作吸干了你的灵魂" }
+        };
+
+        // 当前题目索引
+        let currentQuestion = 0;
+        // 各维度得分
+        let scores = { C: 0, F: 0, S: 0, O: 0, A: 0 };
+        // 用户答案
+        let answers = [];
+
+        // 开始测试
+        function startTest() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('testPage').style.display = 'block';
+            currentQuestion = 0;
+            scores = { C: 0, F: 0, S: 0, O: 0, A: 0 };
+            answers = [];
+            showQuestion();
+        }
+
+        // 显示题目
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            
+            // 映射旧的维度名称用于显示
+            const oldDimensionNames = {
+                'C': '投入度',
+                'F': '专注度',
+                'S': '稳定度',
+                'O': '社交度',
+                'A': '进取度'
+            };
+            const dimensionName = oldDimensionNames[question.dimension];
+
+            // 更新进度
+            document.getElementById('progressText').textContent = `${currentQuestion + 1} / ${questions.length}`;
+            document.getElementById('progressFill').style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+
+            // 更新题目
+            document.getElementById('questionNumber').textContent = `${dimensionName} (${question.dimension}) - 第${currentQuestion + 1}题`;
+            document.getElementById('questionText').textContent = question.question;
+
+            // 生成选项
+            const optionsList = document.getElementById('optionsList');
+            optionsList.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionItem = document.createElement('div');
+                optionItem.className = 'option-item';
+                optionItem.onclick = () => selectOption(option.score);
+
+                optionItem.innerHTML = `
+                    <div class="option-text">${option.text}</div>
+                `;
+                optionsList.appendChild(optionItem);
+            });
+        }
+
+        // 选择选项
+        function selectOption(score) {
+            const question = questions[currentQuestion];
+            scores[question.dimension] += score;
+            answers.push(score);
+
+            currentQuestion++;
+
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showLoading();
+            }
+        }
+
+        // 显示加载
+        function showLoading() {
+            document.getElementById('testPage').style.display = 'none';
+            document.getElementById('loadingPage').style.display = 'block';
+
+            setTimeout(() => {
+                showResult();
+            }, 1500);
+        }
+
+        // 显示结果
+        function showResult() {
+            document.getElementById('loadingPage').style.display = 'none';
+            document.getElementById('resultPage').style.display = 'block';
+
+            // 计算 4 字母代码
+            // 维度 1: 动力 (W/L) = 投入度(C) + 进取度(A)
+            const letter1 = (scores.C + scores.A) >= 0 ? 'W' : 'L';
+            // 维度 2: 行动 (E/F) = 专注度(F)
+            const letter2 = scores.F >= 0 ? 'E' : 'F';
+            // 维度 3: 心态 (Z/A) = 稳定度(S)
+            const letter3 = scores.S >= 0 ? 'Z' : 'A';
+            // 维度 4: 社交 (O/I) = 社交度(O)
+            const letter4 = scores.O >= 0 ? 'O' : 'I';
+
+            const resultCode = `${letter1}${letter2}${letter3}${letter4}`;
+            document.getElementById('resultCode').textContent = resultCode;
+
+            // 获取对应的人物形象
+            const persona = personas[resultCode];
+
+            // 设置人物形象图片
+            const personaImage = document.getElementById('personaImage');
+            
+            // 处理不同后缀的图片（目前 WEZO 是 jpg，其他是 png）
+            let ext = '.png';
+            if (resultCode === 'WEZO') {
+                ext = '.jpg';
+            }
+            
+            personaImage.src = `image/${resultCode}${ext}`;
+            personaImage.style.display = 'inline-block';
+            // 如果图片加载失败（比如还没放进去），就隐藏图片避免显示破损图标
+            personaImage.onerror = function() {
+                this.style.display = 'none';
+            };
+
+            // 隐藏彩蛋徽章（因为现在所有结果都是标准人物）
+            document.getElementById('specialBadge').style.display = 'none';
+
+            // 填充结果内容
+            document.getElementById('resultTitle').textContent = persona.name;
+            document.getElementById('resultSummary').textContent = persona.summary;
+            document.getElementById('portrait').textContent = persona.portrait;
+            document.getElementById('leaderView').textContent = persona.leaderView;
+            document.getElementById('colleagueView').textContent = persona.colleagueView;
+            document.getElementById('advice').textContent = persona.advice;
+            document.getElementById('quoteBox').textContent = `"${persona.summary}"`;
+
+            // 计算百分比 (用于结果页展示倾向程度)
+            const pW = Math.round(((scores.C + scores.A + 24) / 48) * 100);
+            const pE = Math.round(((scores.F + 12) / 24) * 100);
+            const pZ = Math.round(((scores.S + 12) / 24) * 100);
+            const pO = Math.round(((scores.O + 12) / 24) * 100);
+
+            // 显示维度详情 (带进度条)
+            const dimensionDetails = document.getElementById('dimensionDetails');
+            dimensionDetails.innerHTML = `
+                <div class="dimension-result" style="display: block;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span class="dimension-result-name">🔥 动力 (W/L)</span>
+                        <span style="font-weight: bold; color: ${letter1 === 'W' ? '#ff4757' : '#4a69bd'}">${letter1 === 'W' ? '卷王 ' + pW + '%' : '躺平 ' + (100 - pW) + '%'}</span>
+                    </div>
+                    <div style="width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; display: flex; overflow: hidden;">
+                        <div style="width: ${pW}%; background: #ff4757;"></div>
+                        <div style="width: ${100 - pW}%; background: #4a69bd;"></div>
+                    </div>
+                </div>
+                <div class="dimension-result" style="display: block;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span class="dimension-result-name">⚡ 行动 (E/F)</span>
+                        <span style="font-weight: bold; color: ${letter2 === 'E' ? '#ff4757' : '#4a69bd'}">${letter2 === 'E' ? '效率 ' + pE + '%' : '摸鱼 ' + (100 - pE) + '%'}</span>
+                    </div>
+                    <div style="width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; display: flex; overflow: hidden;">
+                        <div style="width: ${pE}%; background: #ff4757;"></div>
+                        <div style="width: ${100 - pE}%; background: #4a69bd;"></div>
+                    </div>
+                </div>
+                <div class="dimension-result" style="display: block;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span class="dimension-result-name">🧘 心态 (Z/A)</span>
+                        <span style="font-weight: bold; color: ${letter3 === 'Z' ? '#ff4757' : '#4a69bd'}">${letter3 === 'Z' ? '佛系 ' + pZ + '%' : '内耗 ' + (100 - pZ) + '%'}</span>
+                    </div>
+                    <div style="width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; display: flex; overflow: hidden;">
+                        <div style="width: ${pZ}%; background: #ff4757;"></div>
+                        <div style="width: ${100 - pZ}%; background: #4a69bd;"></div>
+                    </div>
+                </div>
+                <div class="dimension-result" style="display: block;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span class="dimension-result-name">💬 社交 (O/I)</span>
+                        <span style="font-weight: bold; color: ${letter4 === 'O' ? '#ff4757' : '#4a69bd'}">${letter4 === 'O' ? '社牛 ' + pO + '%' : '社恐 ' + (100 - pO) + '%'}</span>
+                    </div>
+                    <div style="width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; display: flex; overflow: hidden;">
+                        <div style="width: ${pO}%; background: #ff4757;"></div>
+                        <div style="width: ${100 - pO}%; background: #4a69bd;"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 重新测试
+        function restartTest() {
+            document.getElementById('resultPage').style.display = 'none';
+            document.getElementById('homePage').style.display = 'block';
+        }
+
+        // 分享结果
+        function shareResult() {
+            const resultCode = document.getElementById('resultCode').textContent;
+            const resultTitle = document.getElementById('resultTitle').textContent;
+            const summary = document.getElementById('resultSummary').textContent;
+
+            const shareText = `【WBTI打工人类型测试】\n\n📊 我的类型：${resultCode}\n🏷️ 类型：${resultTitle}\n📝 ${summary}\n\n💪 快来测测你的打工人类型！\n\n（本测试仅供娱乐，结果仅供参考）`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'WBTI打工人类型测试',
+                    text: shareText
+                }).catch(console.error);
+            } else {
+                // 复制到剪贴板
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('✅ 结果已复制到剪贴板，快去分享吧！');
+                }).catch(() => {
+                    alert('❌ 分享功能暂不支持，请手动截图分享');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
